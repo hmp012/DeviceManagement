@@ -1,10 +1,6 @@
-version: '3.8'
-
 services:
   postgres:
-    build:
-      context: ./DB
-      dockerfile: Dockerfile
+    image: postgres:latest
     container_name: devicemanagement-db
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
@@ -18,4 +14,3 @@ services:
 
 volumes:
   postgres_data:
-
