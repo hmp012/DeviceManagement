@@ -16,19 +16,19 @@ public class DeviceController: ControllerBase
     [Produces("application/json")]
     [ProducesResponseType(typeof(Device), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(InternalServerError), StatusCodes.Status500InternalServerError)]
-    public Task<IActionResult> InsertDevice([FromBody] DeviceDto device)
+    public async Task<IActionResult> InsertDevice([FromBody] DeviceDto device)
     {
         // Implementation for inserting a device
-        throw new NotImplementedException();
+        return Created(nameof(InsertDevice), device);
     }
 
     [HttpPatch("{serialNumber}")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(Device), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
-    public Task<IActionResult> UpdateDevice([FromRoute] Guid serialNumber, [FromBody] DeviceDto device)
+    public async Task<IActionResult> UpdateDevice([FromRoute] Guid serialNumber, [FromBody] DeviceDto device)
     {
         // Implementation for updating a device
-        throw new NotImplementedException();
+        return Ok(device);
     }
 }
