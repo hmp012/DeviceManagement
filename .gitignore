@@ -5,3 +5,8 @@ riderModule.iml
 /_ReSharper.Caches/
 /.idea/
 /DeviceManagament/appsettings.local.json
+!.env.example
+*.env
+.env
+# Environment files with credentials
+
