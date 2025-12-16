@@ -11,7 +11,7 @@ public interface IDeviceRepository
     public Task<Device> UpdateDevice(Device device);
 }
 
-public class DeviceRepository(DeviceManagament.Database.DeviceManagerDbContext dbContext) : IDeviceRepository
+public class DeviceRepository(Database.DeviceManagerDbContext dbContext) : IDeviceRepository
 {
     public async Task<Device> AddDevice(Device device)
     {

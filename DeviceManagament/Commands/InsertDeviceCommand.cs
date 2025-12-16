@@ -1,16 +1,31 @@
 using DeviceManagament.Domain.DTOs;
+using DeviceManagament.Domain.Models;
+using DeviceManagament.Repositories;
 using MediatR;
 
 namespace DeviceManagament.Commands;
 
-public record InsertDeviceCommand(DeviceDto Device) : IRequest<DeviceDto>;
-
-public class InsertDeviceCommandHandler : IRequestHandler<InsertDeviceCommand, DeviceDto>
+public record InsertDeviceCommand(
+    DeviceDto DeviceDto)
 {
-    // Inject your repository/DbContext here
-    
-    public async Task<DeviceDto> Handle(InsertDeviceCommand request, CancellationToken cancellationToken)
+    public class InsertDeviceCommandHandler(
+        IDeviceRepository deviceRepository,
+        ILogger<InsertDeviceCommand> logger) : IRequest<Device>
     {
-        throw new NotImplementedException();
+        public async Task<DeviceDto> Handle(InsertDeviceCommand request, CancellationToken cancellationToken)
+        {
+            Device deviceRequest = request.DeviceDto.ToDevice();
+            Device? deviceCheck = await deviceRepository.GetDevice(deviceRequest);
+            if (deviceCheck != null)
+            {
+                logger.LogInformation("Device with Serial Number {SerialNumber} already exists.",
+                    deviceCheck.SerialNumber);
+                throw new InvalidOperationException(
+                    $"Device with Serial Number {deviceCheck.SerialNumber} already exists.");
+            }
+
+            Device device = await deviceRepository.AddDevice(deviceRequest);
+            return device.ToDeviceDto();
+        }
     }
 }

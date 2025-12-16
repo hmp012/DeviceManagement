@@ -1,5 +1,7 @@
 using Asp.Versioning;
+using DeviceManagament.Commands;
 using DeviceManagament.Database;
+using DeviceManagament.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,6 +35,14 @@ builder.Services.AddDbContext<DeviceManagerDbContext>(opt =>
 {
     opt.UseNpgsql(connectionString);
 });
+
+// Register IDbContext interface pointing to your DbContext implementation
+builder.Services.AddScoped<DeviceManagerDbContext>();
+
+// Register repositories
+builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+
 
 var app = builder.Build();
 

@@ -2,6 +2,7 @@ using Asp.Versioning;
 using DeviceManagament.Commands;
 using DeviceManagament.Domain.DTOs;
 using DeviceManagament.Domain.Models;
+using DeviceManagament.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,6 @@ namespace DeviceManagament.Controllers;
 [Route("api/v{version:apiVersion}/[controller]")]
 public class DeviceController(IMediator mediator) : ControllerBase
 {
-
     [HttpPost]
     [Produces("application/json")]
     [ProducesResponseType(typeof(Device), StatusCodes.Status201Created)]

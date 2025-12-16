@@ -1,3 +1,5 @@
+using DeviceManagament.Domain.Models;
+
 namespace DeviceManagament.Domain.DTOs;
 
 public class DeviceDto
@@ -10,4 +12,19 @@ public class DeviceDto
     public required string OperatingSystem { get; set; }
     public required string DeviceType { get; set; }
     public required string DeviceStatus { get; set; }
+    
+    public Device ToDevice()
+    {
+        return new Device
+        {
+            SerialNumber = new Guid(SerialNumber),
+            ModelId = ModelId,
+            ModelName = ModelName,
+            Manufacturer = Manufacturer,
+            PrimaryUser = PrimaryUser,
+            OperatingSystem = OperatingSystem,
+            DeviceType = Enum.Parse<DeviceType>(DeviceType),
+            DeviceStatus = Enum.Parse<DeviceStatus>(DeviceStatus)
+        };
+    }
 }
