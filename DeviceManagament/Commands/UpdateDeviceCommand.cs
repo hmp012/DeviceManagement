@@ -4,7 +4,7 @@ using MediatR;
 
 namespace DeviceManagament.Commands;
 
-public abstract record UpdateDeviceCommand(Guid SerialNumber, DeviceDto Device) : IRequest<DeviceDto>;
+public record UpdateDeviceCommand(Guid SerialNumber, DeviceDto Device) : IRequest<DeviceDto>;
 
 public class UpdateDeviceCommandHandler : IRequestHandler<UpdateDeviceCommand, DeviceDto>
 {
