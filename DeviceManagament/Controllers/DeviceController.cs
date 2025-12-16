@@ -21,7 +21,7 @@ public class DeviceController(IMediator mediator) : ControllerBase
     public async Task<IActionResult> InsertDevice([FromBody] DeviceDto device)
     {
         var result = await mediator.Send(new InsertDeviceCommand(device));
-        return Created(nameof(InsertDevice), device);
+        return Created(nameof(InsertDevice), result);
     }
 
     [HttpPatch("{serialNumber}")]
@@ -30,7 +30,7 @@ public class DeviceController(IMediator mediator) : ControllerBase
     [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateDevice([FromRoute] Guid serialNumber, [FromBody] DeviceDto device)
     {
-        // Implementation for updating a device
-        return Ok(device);
+        var result = await mediator.Send(new UpdateDeviceCommand(serialNumber, device));
+        return Ok(result);
     }
 }
