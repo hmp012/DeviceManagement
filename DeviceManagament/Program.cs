@@ -1,4 +1,6 @@
 using Asp.Versioning;
+using DeviceManagament.Database;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +24,14 @@ builder.Services.AddApiVersioning(options =>
 {
     options.GroupNameFormat = "'v'VVV";
     options.SubstituteApiVersionInUrl = true;
+});
+
+string connectionString = builder.Configuration.GetConnectionString("DeviceManagerDB") ??
+                          throw new InvalidOperationException("DeviceManagerDB connection string is required");
+
+builder.Services.AddDbContext<DeviceManagerDbContext>(opt => 
+{
+    opt.UseNpgsql(connectionString);
 });
 
 var app = builder.Build();
