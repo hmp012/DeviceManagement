@@ -11,7 +11,7 @@ public class DeviceManagerDbContext(DbContextOptions<DeviceManagerDbContext> opt
 {
     public static readonly string DefaultSchema = "devices";
     public DbSet<Device> Devices { get; set; }
-    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
