@@ -1,6 +1,7 @@
 using Asp.Versioning;
 using DeviceManagament.Commands;
 using DeviceManagament.Database;
+using DeviceManagament.Exceptions;
 using DeviceManagament.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,18 +37,21 @@ builder.Services.AddDbContext<DeviceManagerDbContext>(opt =>
     opt.UseNpgsql(connectionString);
 });
 
-// Register IDbContext interface pointing to your DbContext implementation
-builder.Services.AddScoped<DeviceManagerDbContext>();
+builder.Services.AddScoped<ExceptionFilter>();
 
-// Register repositories
+builder.Services.AddScoped<DeviceManagerDbContext>();
 builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ExceptionFilter>();
+});
 
 var app = builder.Build();
 
 // 2. Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Local"))
 {
     app.UseSwagger();
     app.UseSwaggerUI();

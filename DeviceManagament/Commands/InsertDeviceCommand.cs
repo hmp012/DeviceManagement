@@ -1,5 +1,6 @@
 using DeviceManagament.Domain.DTOs;
 using DeviceManagament.Domain.Models;
+using DeviceManagament.Exceptions;
 using DeviceManagament.Repositories;
 using MediatR;
 
@@ -18,11 +19,10 @@ public record InsertDeviceCommand(
             Device? deviceCheck = await deviceRepository.GetDevice(deviceRequest);
             if (deviceCheck != null)
             {
-                logger.LogInformation("Device with Serial Number {SerialNumber} already exists.",
-                    deviceCheck.SerialNumber);
-                throw new InvalidOperationException(
-                    $"Device with Serial Number {deviceCheck.SerialNumber} already exists.");
+                logger.LogWarning("Device with Serial Number {SerialNumber} already exists.", deviceCheck.SerialNumber);
+                throw new DeviceAlreadyExistsException(deviceCheck.SerialNumber.ToString());
             }
+
 
             Device device = await deviceRepository.AddDevice(deviceRequest);
             return device.ToDeviceDto();
