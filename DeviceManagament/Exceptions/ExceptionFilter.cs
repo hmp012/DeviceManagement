@@ -16,9 +16,17 @@ public class ExceptionFilter : IExceptionFilter
     {
         var response = context.Exception switch
         {
+            ArgumentException ex => new ObjectResult(new { error = ex.Message })
+            {
+                StatusCode = StatusCodes.Status400BadRequest
+            },
             DeviceAlreadyExistsException ex => new ObjectResult(new { error = ex.Message })
             {
                 StatusCode = StatusCodes.Status409Conflict
+            },
+            InvalidDeviceDataException ex => new ObjectResult(new { error = ex.Message })
+            {
+                StatusCode = StatusCodes.Status400BadRequest
             },
             _ => new ObjectResult(new { error = "An unexpected error occurred." })
             {
