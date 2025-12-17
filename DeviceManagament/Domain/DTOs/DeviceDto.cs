@@ -1,4 +1,5 @@
 using DeviceManagament.Domain.Models;
+using DeviceManagament.Exceptions;
 
 namespace DeviceManagament.Domain.DTOs;
 
@@ -15,16 +16,41 @@ public class DeviceDto
     
     public Device ToDevice()
     {
+        // Parse SerialNumber GUID with error handling
+        Guid serialNumberGuid;
+        try
+        {
+            serialNumberGuid = new Guid(SerialNumber);
+        }
+        catch (Exception ex) when (ex is FormatException or ArgumentNullException or OverflowException)
+        {
+            throw new InvalidDeviceDataException("SerialNumber", SerialNumber, "Must be a valid GUID format");
+        }
+        
+        // Parse DeviceType with error handling
+        if (!Enum.TryParse<DeviceType>(DeviceType, true, out var deviceType))
+        {
+            var validValues = string.Join(", ", Enum.GetNames(typeof(DeviceType)));
+            throw new InvalidDeviceDataException("DeviceType", DeviceType, $"Must be one of: {validValues}");
+        }
+        
+        // Parse DeviceStatus with error handling
+        if (!Enum.TryParse<DeviceStatus>(DeviceStatus, true, out var deviceStatus))
+        {
+            var validValues = string.Join(", ", Enum.GetNames(typeof(DeviceStatus)));
+            throw new InvalidDeviceDataException("DeviceStatus", DeviceStatus, $"Must be one of: {validValues}");
+        }
+        
         return new Device
         {
-            SerialNumber = new Guid(SerialNumber),
+            SerialNumber = serialNumberGuid,
             ModelId = ModelId,
             ModelName = ModelName,
             Manufacturer = Manufacturer,
             PrimaryUser = PrimaryUser,
             OperatingSystem = OperatingSystem,
-            DeviceType = Enum.Parse<DeviceType>(DeviceType),
-            DeviceStatus = Enum.Parse<DeviceStatus>(DeviceStatus)
+            DeviceType = deviceType,
+            DeviceStatus = deviceStatus
         };
     }
 }
