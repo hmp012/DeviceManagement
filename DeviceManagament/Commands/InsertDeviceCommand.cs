@@ -6,11 +6,11 @@ using MediatR;
 namespace DeviceManagament.Commands;
 
 public record InsertDeviceCommand(
-    DeviceDto DeviceDto)
+    DeviceDto DeviceDto) : IRequest<DeviceDto>
 {
     public class InsertDeviceCommandHandler(
         IDeviceRepository deviceRepository,
-        ILogger<InsertDeviceCommand> logger) : IRequest<Device>
+        ILogger<InsertDeviceCommand> logger) : IRequestHandler<InsertDeviceCommand, DeviceDto>
     {
         public async Task<DeviceDto> Handle(InsertDeviceCommand request, CancellationToken cancellationToken)
         {
