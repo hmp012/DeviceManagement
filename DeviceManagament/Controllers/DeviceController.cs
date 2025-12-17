@@ -2,6 +2,8 @@ using Asp.Versioning;
 using DeviceManagament.Commands;
 using DeviceManagament.Domain.DTOs;
 using DeviceManagament.Domain.Models;
+using DeviceManagament.Exceptions;
+using DeviceManagament.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +15,10 @@ namespace DeviceManagament.Controllers;
 [Route("api/v{version:apiVersion}/[controller]")]
 public class DeviceController(IMediator mediator) : ControllerBase
 {
-
     [HttpPost]
     [Produces("application/json")]
     [ProducesResponseType(typeof(Device), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(DeviceAlreadyExistsException), StatusCodes.Status409Conflict)]
     [ProducesResponseType(typeof(InternalServerError), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> InsertDevice([FromBody] DeviceDto device)
     {

@@ -1,5 +1,4 @@
 using DeviceManagament.Domain.DTOs;
-using DeviceManagament.Domain.Models;
 using MediatR;
 
 namespace DeviceManagament.Commands;
