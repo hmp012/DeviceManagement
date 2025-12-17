@@ -15,7 +15,7 @@ public record InsertDeviceCommand(
     {
         public async Task<DeviceDto> Handle(InsertDeviceCommand request, CancellationToken cancellationToken)
         {
-            Device deviceRequest = request.DeviceDto.ToDevice();
+            Device deviceRequest = request.DeviceDto.ToDevice(); // TODO: check all fields can are valid so no unhandled error is thrown
             Device? deviceCheck = await deviceRepository.GetDevice(deviceRequest);
             if (deviceCheck != null)
             {
