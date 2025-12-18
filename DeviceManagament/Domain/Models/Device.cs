@@ -4,7 +4,7 @@ using MediatR;
 
 namespace DeviceManagament.Domain.Models;
 
-public class Device : IRequest
+public class Device
 {
     [Key]
     public Guid SerialNumber { get; init; }
