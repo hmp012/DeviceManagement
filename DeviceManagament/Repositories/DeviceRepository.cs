@@ -28,8 +28,21 @@ public class DeviceRepository(Database.DeviceManagerDbContext dbContext) : IDevi
 
     public async Task<Device> UpdateDevice(Device device)
     {
-        EntityEntry<Device> updatedEntity = dbContext.Devices.Update(device);
+        // Get the existing device from the database
+        var existingDevice = await dbContext.Devices
+            .FirstOrDefaultAsync(d => d.SerialNumber == device.SerialNumber);
+        
+        if (existingDevice == null)
+        {
+            throw new KeyNotFoundException($"Device with serial number {device.SerialNumber} not found.");
+        }
+        
+        existingDevice.PrimaryUser = device.PrimaryUser;
+        existingDevice.OperatingSystem = device.OperatingSystem;
+        existingDevice.DeviceType = device.DeviceType;
+        existingDevice.DeviceStatus = device.DeviceStatus;
+        
         await dbContext.SaveChangesAsync();
-        return updatedEntity.Entity;
+        return existingDevice;
     }
 }

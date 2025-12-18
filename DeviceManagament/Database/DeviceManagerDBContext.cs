@@ -1,8 +1,6 @@
 using DeviceManagament.Domain.Models;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace DeviceManagament.Database;
 
@@ -16,8 +14,25 @@ public class DeviceManagerDbContext(DbContextOptions<DeviceManagerDbContext> opt
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.HasDefaultSchema(DefaultSchema);
-        modelBuilder.Entity<Device>()
-            .HasIndex(d => d.SerialNumber)
-            .IsUnique();
+        
+        modelBuilder.Entity<Device>(entity =>
+        {
+            entity.HasIndex(d => d.SerialNumber)
+                .IsUnique();
+            
+            // Make init properties non-modifiable after insert
+            entity.Property(d => d.SerialNumber)
+                .ValueGeneratedNever()
+                .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Throw);
+            
+            entity.Property(d => d.ModelId)
+                .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Throw);
+            
+            entity.Property(d => d.ModelName)
+                .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Throw);
+            
+            entity.Property(d => d.Manufacturer)
+                .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Throw);
+        });
     }
 }
